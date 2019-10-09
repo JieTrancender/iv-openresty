@@ -34,6 +34,7 @@ end
 
 function _M.get(id)
     core.log.info("get: ", id)
+    id = id or 1
     local res, err = core.redis.get(id)
     if not res then
         core.log.error("failed to get note[", key, "]: ", err)
