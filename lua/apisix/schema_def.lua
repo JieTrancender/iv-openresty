@@ -420,5 +420,17 @@ _M.stream_route = {
     }
 }
 
+_M.note = {
+    type = "object",
+    properties = {
+        content = {
+            description = "note content",
+            type = "string", minLength = 3, maxLength = 64,
+        }
+    },
+    required = {"content"},
+    additionalProperties = false,
+}
+
 
 return _M

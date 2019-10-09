@@ -1,8 +1,27 @@
 iv:
-  node_listen: 6080
+  node_listen: 8080
   node_ssl_listen: 6443
 
   real_ip_header: "X-Real-IP"
   real_ip_from:
     - 127.0.0.1
     - 'unix:'
+
+etcd:
+  host: "http://47.107.51.156:2379"
+  prefix: "/iv"
+  timeout: 1
+
+mysql:
+  host: "47.107.51.156"
+  port: 3306
+  database: "iv"
+  user: "root"
+  password: "keyboard-man"
+  charset: "utf8"
+  max_packet_size: 1048576
+
+redis:
+  host: "47.107.51.156"
+  port: 6079
+  

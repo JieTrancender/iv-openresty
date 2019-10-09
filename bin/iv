@@ -34,7 +34,7 @@ worker_processes auto;
 worker_cpu_affinity auto;
 {% end %}
 
-error_log logs/error.log error;
+error_log logs/error.log info;
 pid logs/nginx.pid;
 
 worker_rlimit_nofile 20480;
@@ -51,9 +51,9 @@ http {
     lua_package_cpath "]=] .. [=[{*iv_lua_home*}/luaclib/?.so;;]=]
                       .. [=[{*lua_cpath*};";
 
-    log_format main '$remote_addr - $remote_user [$time_local $http_host "$request" $status $body_bytes_sent $request_time "$http_referer" "$http_user_agent" $upstream_addr $upstream_status $upstream_response_time';
+    log_format main '$remote_addr - $remote_user [$time_local] $http_host "$request" $status $body_bytes_sent $request_time "$http_referer" "$http_user_agent" $upstream_addr $upstream_status $upstream_response_time';
 
-    access_log logs/access.log main buffer=32768 flush=3;
+    access_log logs/access.log main buffer=32768 flush=1;
     open_file_cache max=1000 inactive=60;
 
     more_set_headers 'Server: IV web server';
@@ -72,7 +72,7 @@ http {
     }
 
     init_worker_by_lua_block {
-        -- iv.http_init_worker()
+        iv.http_init_worker()
     }
 
     server {
@@ -101,9 +101,15 @@ http {
             }
         }
 
+        location /test {
+            content_by_lua_block {
+                iv.test()
+            }
+        }
+
         location / {
             content_by_lua_block {
-                echo "todo......"
+                iv.http_content()
             }
         }
     }

@@ -22,4 +22,6 @@ return {
     etcd     = require("apisix.core.etcd"),
     http     = require("apisix.core.http"),
     tablepool= require("tablepool"),
+    mysql    = require("iv.core.mysql"),
+    redis    = require("iv.core.redis"),
 }
