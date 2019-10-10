@@ -51,11 +51,20 @@ local function run()
     end
 end
 
+local function main()
+    core.response.exit(200, {msg = "hello, welcome."})
+end
+
 local uri_route = {
     {
         paths = [[/iv/*]],
         methods = {"GET", "PUT", "POST", "DELETE", "PATCH"},
         handler = run,
+    },
+    {
+        paths = [[/]],
+        methods = {"GET", "PUT", "POST", "DELETE", "PATCH"},
+        handler = main,
     }
 }
 
