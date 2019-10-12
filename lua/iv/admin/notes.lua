@@ -34,30 +34,30 @@ end
 
 function _M.get(id)
     core.log.info("get: ", id)
-    id = id or 1
-    local res, err = core.redis.get(id)
-    if not res then
-        core.log.error("failed to get note[", key, "]: ", err)
-        return 500, {error_msg = err}
-    end
-
-    return 200, res or {}
-
-    -- local sql
-    -- if not id then
-    --     sql = "select * from notes;"
-    -- else
-    --     sql = "select * from notes where id = " .. id .. ";"
-    -- end
-
-    -- local res, err = core.mysql.query(sql)
+    -- id = id or 1
+    -- local res, err = core.redis.get(id)
     -- if not res then
     --     core.log.error("failed to get note[", key, "]: ", err)
     --     return 500, {error_msg = err}
     -- end
 
-    -- core.log.info("res: ", core.json.delay_encode(res))
-    -- return res.status, res.body
+    -- return 200, {data = res}
+
+    local sql
+    if not id then
+        sql = "select * from notes;"
+    else
+        sql = "select * from notes where id = " .. id .. ";"
+    end
+
+    local res, err = core.mysql.query(sql)
+    if not res then
+        core.log.error("failed to get note[", key, "]: ", err)
+        return 500, {error_msg = err}
+    end
+
+    core.log.info("res: ", core.json.delay_encode(res))
+    return 200, res
 
     -- local key = "/notes"
     -- if id then
@@ -96,14 +96,24 @@ function _M.post(id, conf)
         return 400, err
     end
 
-    local key = "/notes"
-    local res, err = core.etcd.push("/notes", conf)
+    local sql = "insert into notes(content) values(\"" .. conf.content .. "\");"
+    local res, err = core.mysql.query(sql)
     if not res then
-        core.log.error("failed to post note[", key, "]: ", err)
+        core.log.error("failed to get note[", key, "]: ", err)
         return 500, {error_msg = err}
     end
 
-    return res.status, res.body
+    core.log.info("res: ", core.json.delay_encode(res))
+    return 200, res
+
+    -- local key = "/notes"
+    -- local res, err = core.etcd.push("/notes", conf)
+    -- if not res then
+    --     core.log.error("failed to post note[", key, "]: ", err)
+    --     return 500, {error_msg = err}
+    -- end
+
+    -- return res.status, {data = res.body}
 end
 
 return _M

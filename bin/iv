@@ -86,6 +86,8 @@ http {
         # ssl_certificate_key cert/iv.key;
         #ssl_session_cache shared:SSL:1m;
 
+        charset utf-8;
+
         {% if with_module_status then %}
         location = /iv/nginx_status {
             allow 127.0.0.0/24;
