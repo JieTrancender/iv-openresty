@@ -39,6 +39,7 @@ function _M.welcome()
 end
 
 function _M.test()
+    local radix = require("resty.radixtree")
     local rx = radix.new({
         {
             paths = {"/bb*", "/aa"},
