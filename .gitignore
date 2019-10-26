@@ -3,3 +3,5 @@ test-nginx
 t/servroot
 
 logs/*
+
+typecho
