@@ -17,21 +17,21 @@ function _M.post( id, conf )
 	core.log.info("verify ", id, " ", core.json.delay_encode(conf))
 
 	local httpc = http:new()
-	local urlTbl = {
-		"https://api.weixin.qq.com/sns/jscode2session?appid=",
-		appid,
-		"&secret=",
-		secret,
-		"&js_code=",
-		conf.code,
-		"&grant_type=authorization_code",
-	}
-	core.log.info("url: ", table_concat(urlTbl))
+	-- local urlTbl = {
+	-- 	"https://api.weixin.qq.com/sns/jscode2session?appid=",
+	-- 	appid,
+	-- 	"&secret=",
+	-- 	secret,
+	-- 	"&js_code=",
+	-- 	conf.code,
+	-- 	"&grant_type=authorization_code",
+	-- }
+	-- core.log.info("url: ", table_concat(urlTbl))
 	local err
 	session, err = httpc:ssl_handshake(session, requestHost, false)
 	if not session then
-		core.log.error("verfiy ssl_handshake wrong: ", res)
-		return 503 {error = err}
+		core.log.error("verfiy ssl_handshake wrong: ", err)
+		return 503, {error = err}
 	end
 
 	local res, err = httpc:request_uri(requestHost,
@@ -48,7 +48,7 @@ function _M.post( id, conf )
 
 	if not res then
 		core.log.error("verify wrong: ", res)
-		return 503 {error = err}
+		return 503, {error = err}
 	end
 
 	core.log.info("err", err, core.json.delay_encode(res))

@@ -138,12 +138,12 @@ http {
 
         #此配置使nginx支持php
         location ~ .*\.php(\/.*)*$ {
-	    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_pass 127.0.0.1:9000;#php-fpm的默认端口是9000
             fastcgi_index index.php;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
             #include fastcgi_params;
-	    include fastcgi.conf;
+        include fastcgi.conf;
         }
 
         location ~ .*\.(js|css)$ {
