@@ -32,7 +32,7 @@ function _M.post( id, conf )
 	-- if not session then
 	-- 	core.log.error("verfiy ssl_handshake wrong: ", err)
 	-- 	return 503, {error = err}
-	end
+	-- end
 
 	local res, err = httpc:request_uri(requestHost,
 	{
