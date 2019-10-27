@@ -37,23 +37,25 @@ function _M.post( id, conf )
 	local res, err = httpc:request_uri(requestHost,
 	{
 		path = requestPath,
+		method = "GET",
 		query = 
 		{
 			appid = appid,
 			secret = secret,
 			js_code = conf.code,
 			grant_type = "authorization_code"
-		}
+		},
+		ssl_verify = false,
 	})
 
 	if not res then
-		core.log.error("verify wrong: ", res)
+		core.log.error("verify wrong: ", err)
 		return 503, {error = err}
 	end
 
-	core.log.info("err", err, core.json.delay_encode(res))
+	core.log.info("verify:", res.status, res.body)
 
-	return 200, res
+	return res.status, res.body
 end
 
 return _M
