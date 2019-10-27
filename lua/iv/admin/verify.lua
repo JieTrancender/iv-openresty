@@ -27,11 +27,11 @@ function _M.post( id, conf )
 	-- 	"&grant_type=authorization_code",
 	-- }
 	-- core.log.info("url: ", table_concat(urlTbl))
-	local err
-	session, err = httpc:ssl_handshake(session, requestHost, false)
-	if not session then
-		core.log.error("verfiy ssl_handshake wrong: ", err)
-		return 503, {error = err}
+	-- local err
+	-- session, err = httpc:ssl_handshake(session, requestHost, false)
+	-- if not session then
+	-- 	core.log.error("verfiy ssl_handshake wrong: ", err)
+	-- 	return 503, {error = err}
 	end
 
 	local res, err = httpc:request_uri(requestHost,
