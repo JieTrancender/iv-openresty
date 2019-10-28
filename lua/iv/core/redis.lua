@@ -51,4 +51,95 @@ function _M.get(key)
     return res
 end
 
+function _M.hexists( key, field )
+    local redis_cli, err = new()
+    if not redis_cli then
+        return nil, err
+    end
+
+    local res, err = redis_cli:hexists(key, field)
+    if not res then
+        return nil, err
+    end
+
+    local ok
+    ok, err = redis_cli:set_keepalive(10000, 100)
+    if not ok then
+        return nil, err
+    end
+
+    return res
+end
+
+function _M.incr( key )
+    local redis_cli, err = new()
+    if not redis_cli then
+        return nil, err
+    end
+
+    local res, err = redis_cli:incr(key)
+    if not res then
+        return nil, err
+    end
+
+    local ok
+    ok, err = redis_cli:set_keepalive(10000, 100)
+    if not ok then
+        return nil, err
+    end
+
+    return res
+end
+
+function _M.hmset( key, ... )
+    local redis_cli, err = new()
+    if not redis_cli then
+        return nil, err
+    end
+
+    local res, err = redis_cli:hmset(key, ...)
+    if not res then
+        return nil, err
+    end
+
+    local ok
+    ok, err = redis_cli:set_keepalive(10000, 100)
+    if not ok then
+        return nil, err
+    end
+
+    return res
+end
+
+local function _do_cmd( cmd, ... )
+    local redis_cli, err = new()
+    if not redis_cli then
+        return nil, err
+    end
+
+    local res, err = redis_cli[cmd](redis_cli, ...)
+    if not res then
+        return nil, err
+    end
+
+    local ok
+    ok, err = redis_cli:set_keepalive(10000, 100)
+    if not ok then
+        return nil, err
+    end
+
+    return res
+end
+
+setmetatable(_M, {__index = function ( self, cmd )
+    local method = 
+        function ( ... )
+            return _do_cmd(cmd, ...)
+        end
+
+    _M[cmd] = method
+
+    return method
+end})
+
 return _M

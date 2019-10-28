@@ -1,7 +1,7 @@
 local core = require("apisix.core")
 local http = require("resty.http")
+local jwt = require("resty.jwt")
 local table_concat = table.concat
-local decode = core.json.decode
 
 local appid = "wxa020bb825fc38cc6"
 local secret = "9f2eae8aeb724991a45a8064c5e9a152"
@@ -56,6 +56,20 @@ function _M.post( id, conf )
 	core.log.info("verify:", res.status, res.body)
 
 	return res.status, res.body
+end
+
+function _M.get()
+	local headers = ngx.req.get_headers()
+	core.log.info("get: ", core.json.delay_encode(headers))
+	local jwt_token = headers["Authorization"]
+	local jwt_obj = jwt:verify("lua-resty-jwt", jwt_token)
+
+	core.log.info("jwt_token: ", jwt_token)
+	core.log.info("payload: ", core.json.delay_encode(jwt_obj.payload))
+	-- core.log.info("key: ", jwt_obj.payload.key)
+
+
+	return 200, jwt_obj
 end
 
 return _M

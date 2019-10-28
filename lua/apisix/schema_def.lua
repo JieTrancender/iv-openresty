@@ -432,5 +432,15 @@ _M.note = {
     additionalProperties = false,
 }
 
+_M.user = {
+    type = "object",
+    properties = {
+        username = {type = "string"},
+        email = {type = "string"},
+        password = {type = "string"},
+    },
+    required = {"username", "email", "password"},
+    additionalProperties = false,
+}
 
 return _M

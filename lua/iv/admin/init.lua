@@ -8,6 +8,7 @@ local ngx = ngx
 local resources = {
     notes = require("iv.admin.notes"),
     verify = require("iv.admin.verify"),
+    user = require("iv.admin.user"),
 }
 
 local _M = {

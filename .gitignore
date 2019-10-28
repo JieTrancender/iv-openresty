@@ -5,3 +5,5 @@ t/servroot
 logs/*
 
 typecho
+
+tools/test_curl.sh

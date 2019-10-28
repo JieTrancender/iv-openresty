@@ -5,4 +5,4 @@ create table `notes`
 ) comment = '记录表';
 
 alter table `notes`
-add column createdTime TIMESTAMP(6) not NULL DEFAULT CURRENT_TIMESTAMP(6)
+add column createdTime TIMESTAMP(6) not NULL DEFAULT CURRENT_TIMESTAMP(6);
