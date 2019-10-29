@@ -9,6 +9,7 @@ local resources = {
     notes = require("iv.admin.notes"),
     verify = require("iv.admin.verify"),
     user = require("iv.admin.user"),
+    session = require("iv.admin.session"),
 }
 
 local _M = {
