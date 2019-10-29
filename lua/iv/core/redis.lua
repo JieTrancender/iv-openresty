@@ -15,7 +15,10 @@ local function new()
 
     log.info("redis: ", json.delay_encode(local_conf.redis))
     local redis_conf = clone_tab(local_conf.redis)
-    local redis_cli = redis:new()
+    local redis_cli, err = redis:new()
+    if not redis_cli then
+        return nil, err
+    end
 
     redis:set_timeouts(1000, 1000, 1000)
 
