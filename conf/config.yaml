@@ -22,7 +22,6 @@ mysql:
   max_packet_size: 1048576
 
 redis:
-  host: "47.107.51.156"
-  port: 6079
-  prefix: "iv-development"
+  host: "192.168.3.130"
+  port: 6379
   

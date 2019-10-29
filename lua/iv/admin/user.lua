@@ -1,7 +1,5 @@
-local fetch_local_conf = require("apisix.core.config_local").local_conf
 local core = require("apisix.core")
 local table_concat = table.concat
-local prefix
 
 local _M = {
     version = 0.1
@@ -9,7 +7,7 @@ local _M = {
 
 local function check_conf( id, conf, need_id )
     if not conf then
-        return nil, {error_msg = "missing username and password"}
+        return nil, {error_msg = "missing username, email and password"}
     end
 
     if not conf.username then
@@ -57,17 +55,18 @@ function _M.post( id, conf )
         return 400, err
     end
 
-    if not prefix then
-        -- 默认通过邮件注册
-        local local_conf, err = fetch_local_conf()
-        if not local_conf then
-            return 500, {error_msg = err}
-        end
-        prefix = local_conf.redis.prefix
+    local usernameKey = "iv:username2id:"..conf.username
+    local res, err = core.redis.mget(usernameKey)
+    if not res then
+        core.log.error("failed to post user:", usernameKey, core.json.delay_encode(conf))
+        return 500, {error_msg = err}
     end
 
-    local emailKeyTbl = {prefix, ":email2id:", conf.email}
-    local emailKey = table_concat(emailKeyTbl)
+    if res[1] ~= ngx.null then
+        return 400, {error_msg = "this username has been registed"}
+    end
+
+    local emailKey = "iv:email2id:"..conf.email
     local res, err = core.redis.mget(emailKey)
     if not res then
         core.log.error("failed to post user[", emailKey, conf.email, err)
@@ -79,19 +78,24 @@ function _M.post( id, conf )
     end
 
     core.log.info("new user:", conf.username, " ", conf.email, " ", conf.password)
-    local userCount = prefix..":userCount"
+    local userCount = "iv:userCount"
     res, err = core.redis.incr(userCount)
     if not res then
         return 500, {error_msg = err}
     end
 
     local userId = res
+    res, err = core.redis.mset(usernameKey, userId)
+    if not res then
+        return 500, {error_msg = err}
+    end
+
     res, err = core.redis.mset(emailKey, userId)
     if not res then
         return 500, {error_msg = err}
     end
 
-    local userHash = table_concat({prefix, ":user:", userId})
+    local userHash = "iv:user:"..userId
     res, err = core.redis.hmset(userHash, "username", conf.username, "email", conf.email, "password", conf.password)
     if not res then
         return 500, {error_msg = err}

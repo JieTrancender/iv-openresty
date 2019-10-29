@@ -435,7 +435,12 @@ _M.note = {
 _M.user = {
     type = "object",
     properties = {
-        username = {type = "string"},
+        username = {
+            type = "string",
+            minLength = 6,
+            maxLength = 24,
+            pattern = [[^[a-zA-Z0-9_]+$]],
+        },
         email = {type = "string"},
         password = {type = "string"},
     },
