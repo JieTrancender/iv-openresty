@@ -1,4 +1,12 @@
+INST_PREFIX ?= /usr
+INST_LIBDIR ?= $(INST_PREFIX)/lib64/lua/5.1
+INST_LUADIR ?= $(INST_PREFIX)/share/lua/5.1
+INST_BINDIR ?= /usr/bin
+INSTALL ?= install
+UNAME ?= $(shell uname)
 OR_EXEC ?= $(shell which openresty)
+LUA_JIT_DIR ?= $(shell ${OR_EXEC} -V 2>&1 | grep prefix | grep -Eo 'prefix=(.*?)/nginx' | grep -Eo '/.*/')luajit
+LUAROCKS_VER ?= $(shell luarocks --version | grep -Eo "luarocks [0-9]+.")
 TEST_CMD ?= bin/busted $(BUSTED_ARGS)
 
 # DEV_ROCKS = "busted" "luacheck"
@@ -21,8 +29,16 @@ help:
 	@grep -E '^### [-A-Za-z0-9_]+:' Makefile | sed 's/###/   /'
 
 
-### dev:          initialize the runtime environment
-# dev: dependencies
+### dev:          create a development environment
+dev:
+ifeq ($(UNAME),Darwin)
+	luarocks install --lua-dir=$(LUA_JIT_DIR) rockspec/iv-dev-0.0-1.rockspec --only-deps
+else ifneq($(LUAROCKS_VER),'luarocks 3.')
+	luarocks install rockspec/iv-dev-0.0-1.rockspec --only-deps
+else
+	luarocks install --lua-dir=/usr/local/openresty/luajit rockspec/iv-dev-0.0-1.rockspec --only-deps
+endif
+
 
 ### init:          initialize the runtime environment
 init:
