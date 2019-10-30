@@ -19,8 +19,8 @@ end
 local iv_home = pwd
 -- package.cpath = pwd .. package.cpath
 package.path = pwd .. "/lua/?.lua;"
-                .. pwd .. "/lualib/?.lua;"
-                .. package.path
+               .. "/usr/local/share/lua/5.1/?.lua;"
+               .. package.path
 
 
 local yaml = require("tinyyaml")
