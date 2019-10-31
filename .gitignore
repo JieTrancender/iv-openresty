@@ -7,3 +7,5 @@ logs/*
 typecho
 
 tools/test_curl.sh
+
+conf/apisix.uid

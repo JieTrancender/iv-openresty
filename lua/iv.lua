@@ -11,6 +11,19 @@ local _M = {
     version = 0.1
 }
 
+function _M.http_init()
+    require("resty.core")
+
+    local seed, err = core.utils.get_seed_from_urandom()
+    if not seed then
+        core.log.warn('failed to get seed from urandom: ', err)
+        seed = ngx.now() * 1000 + ngx.worker.pid()
+    end
+    math.randomseed(seed)
+
+    core.id.init()
+end
+
 function _M.http_init_worker()
     core.log.info("http_init_worker")
     -- router.http_init_worker()

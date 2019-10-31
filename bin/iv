@@ -70,7 +70,7 @@ http {
     init_by_lua_block {
         require "resty.core"
         iv = require("iv")
-        -- iv.http_init()
+        iv.http_init()
     }
 
     init_worker_by_lua_block {

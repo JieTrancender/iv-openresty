@@ -33,7 +33,7 @@ help:
 dev:
 ifeq ($(UNAME),Darwin)
 	luarocks install --lua-dir=$(LUA_JIT_DIR) rockspec/iv-dev-0.0-1.rockspec --only-deps
-else ifneq($(LUAROCKS_VER),'luarocks 3.')
+else ifneq ($(LUAROCKS_VER),'luarocks 3.')
 	luarocks install rockspec/iv-dev-0.0-1.rockspec --only-deps
 else
 	luarocks install --lua-dir=/usr/local/openresty/luajit rockspec/iv-dev-0.0-1.rockspec --only-deps
@@ -67,8 +67,6 @@ clean:
 
 
 ### test:          run the test case
-# test:
-# 	@$(TEST_CMD) spec/welcome_spec.lua
-# 	prove -I test-nginx/lib -r t
-# 	resty -I lua test/busted_runner.lua
-# 	resty -Ilua -Ilualib -Iconfig spec/welcome_spec.lua
+test:
+	TEST_NGINX_LOG_LEVEL=info \
+	prove -I../test-nginx/lib -r -s t/
