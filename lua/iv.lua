@@ -48,7 +48,24 @@ end
 end -- do
 
 function _M.welcome()
-    core.response.exit(200, "welcome...")
+    local result = {
+        content = "welcome...",
+        method = get_method(),
+        headers = {},
+        body = {}
+    }
+
+    local headers = ngx.req.get_headers()
+    for k, v in pairs(headers) do
+        result.headers[k] = v
+    end
+
+    ngx.req.read_body()
+    local req_body = ngx.req.get_body_data()
+    result.body = req_body
+
+    -- core.response.exit(200)
+    core.response.exit(200, result)
 end
 
 function _M.test()
